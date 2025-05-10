@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Artists | Street & Ink</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reuse styles from main page with additions */
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #f5f5f5;
+            --accent: #ff5e5b;
+            --accent-dark: #e04e4b;
+            --text: #333;
+            --text-light: #777;
+            --white: #fff;
+            --black: #000;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --border-radius: 12px;
+            --section-padding: 80px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #f5f5f5;
+            --secondary: #1a1a1a;
+            --text: #f0f0f0;
+            --text-light: #bbb;
+            --white: #121212;
+            --black: #f5f5f5;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            outline: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            color: var(--white);
+        }
+
+        .section {
+            padding: var(--section-padding) 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent);
+            margin: 20px auto 0;
+        }
+
+        nav {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transform: translateY(-150%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 999;
+        }
+        
+        [data-theme="dark"] nav {
+            background-color: #121212;
+        }
+        
+        nav.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        nav ul {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        nav ul li {
+            margin: 0 0 15px 0;
+        }
+
+        /* Header styles */
+        header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] header {
+            background-color: rgba(18, 18, 18, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo-image {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        /* Search and Filter Section */
+        .search-filters {
+            background-color: var(--secondary);
+            padding: 40px 0;
+            margin-bottom: 40px;
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: var(--accent);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-checkbox {
+            display: none;
+        }
+
+        .filter-label {
+            padding: 8px 15px;
+            background-color: var(--white);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-checkbox:checked + .filter-label {
+            background-color: var(--accent);
+            color: var(--white);
+        }
+
+        .sort-select {
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--text-light);
+            background-color: var(--white);
+            color: var(--text);
+        }
+
+        /* Artist Grid */
+        .artist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .artist-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .artist-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .artist-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .artist-card-img {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .artist-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .artist-card:hover .artist-card-img img {
+            transform: scale(1.05);
+        }
+
+        .artist-card-content {
+            padding: 25px 20px;
+        }
+
+        .artist-card-name {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .artist-card-location {
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .artist-card-bio {
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            min-height: 60px;
+        }
+
+        .artist-card-stats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .artist-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .artist-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .artist-tag {
+            background-color: var(--secondary);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Featured Artist */
+        .featured-artist {
+            background-color: var(--secondary);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin: 60px 0;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .featured-artist-image {
+            flex: 1;
+            min-height: 400px;
+            overflow: hidden;
+        }
+
+        .featured-artist-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-artist-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .featured-artist-name {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .featured-artist-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .featured-artist-description {
+            margin-bottom: 30px;
+            color: var(--text-light);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 50px;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary);
+            color: var(--text);
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .pagination-btn.active {
+            background-color: var(--accent);
+            color: var(--white);
+        }
+
+        .pagination-btn:hover:not(.active) {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            margin-top: 80px;
+            padding: 60px 0;
+            background-color: var(--secondary);
+            border-radius: var(--border-radius);
+        }
+
+        .cta-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 80px 0 30px;
+            margin-top: 80px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-about {
+            max-width: 300px;
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .footer-logo span {
+            color: var(--accent);
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .footer-contact {
+            list-style: none;
+        }
+
+        .footer-contact li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .footer-contact i {
+            color: var(--accent);
+            margin-top: 3px;
+        }
+
+        .footer-contact span {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .featured-artist {
+                flex-direction: column;
+            }
+            
+            .featured-artist-image {
+                min-height: 300px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .artist-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .featured-artist-content {
+                padding: 30px 20px;
+            }
+            
+            .featured-artist-name {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .section {
+                padding: 60px 0;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .artist-card-img {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="S&ILanding.html" class="logo">
+                <img src="img/street.png" alt="Logo" class="logo-image">
+                Street & <span>Ink</span>
+            </a>
+            <div style="display: flex; align-items: center;">
+                <nav id="nav">
+                    <ul>
+                        <li><a href="S&ILanding.html#map">Map</a></li>
+                        <li><a href="S&ILanding.html#art">Street Art</a></li>
+                        <li><a href="S&IArtists.html">Artists</a></li>
+                        <li><a href="S&ILanding.html#categories">Categories</a></li>
+                        <li><a href="S&ILanding.html#community">Community</a></li>
+                        <li><a href="S&ILanding.html#about">About</a></li>
+                        <li><a href="S&ISignin.html" class="btn btn-primary">Sign In</a></li>
+                    </ul>
+                </nav>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="section">
+            <div class="container">
+                <h1 class="section-title">All Street Artists</h1>
+                <p class="text-center" style="max-width: 800px; margin: 0 auto 30px;">
+                    From seasoned muralists to fresh urban artists, explore the creators who are redefining public spaces.
+                </p>
+            </div>
+        </section>
+
+        <!-- Search and Filters -->
+        <section class="search-filters">
+            <div class="container">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search artists by name, city, or style...">
+                    <button class="search-btn">Search</button>
+                </div>
+                
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <span class="filter-title">Filter by Style:</span>
+                        <div class="filter-options">
+                            <input type="checkbox" id="graffiti" class="filter-checkbox" checked>
+                            <label for="graffiti" class="filter-label">Graffiti</label>
+                            
+                            <input type="checkbox" id="murals" class="filter-checkbox" checked>
+                            <label for="murals" class="filter-label">Murals</label>
+                            
+                            <input type="checkbox" id="stencils" class="filter-checkbox" checked>
+                            <label for="stencils" class="filter-label">Stencils</label>
+                            
+                            <input type="checkbox" id="stickers" class="filter-checkbox">
+                            <label for="stickers" class="filter-label">Stickers</label>
+                            
+                            <input type="checkbox" id="installations" class="filter-checkbox">
+                            <label for="installations" class="filter-label">Installations</label>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <span class="filter-title">Filter by Location:</span>
+                        <select class="sort-select">
+                            <option value="">All Locations</option>
+                            <option value="new-york">New York</option>
+                            <option value="london">London</option>
+                            <option value="berlin">Berlin</option>
+                            <option value="los-angeles">Los Angeles</option>
+                            <option value="tokyo">Tokyo</option>
+                            <option value="sao-paulo">São Paulo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <span class="filter-title">Sort by:</span>
+                        <select class="sort-select">
+                            <option value="popular">Most Popular</option>
+                            <option value="newest">Newest</option>
+                            <option value="trending">Trending</option>
+                            <option value="a-z">A-Z</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Artist -->
+        <section class="section">
+            <div class="container">
+                <div class="featured-artist">
+                    <div class="featured-artist-image">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Featured Artist">
+                    </div>
+                    <div class="featured-artist-content">
+                        <span class="featured-badge">Artist of the Month</span>
+                        <h2 class="featured-artist-name">Felipe Pantone</h2>
+                        <div class="featured-artist-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Buenos Aires, Argentina</span>
+                        </div>
+                        <p class="featured-artist-description">
+                            Felipe Pantone is known for his vibrant, geometric works exploring digital themes and optical art. His dynamic style blends traditional graffiti with digital aesthetics, creating mesmerizing visual experiences.
+                        </p>
+                        <a href="S&IArtistProfile.html" class="btn btn-primary">Explore Felipe's Art</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Artist Grid -->
+        <section class="section">
+            <div class="container">
+                <div class="artist-grid">
+                    <!-- Artist 1 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1542103749-8ef59b94f47e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Banksy</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Bristol, UK</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                Anonymous England-based street artist known for his satirical and subversive work.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">420</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">12.5k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#Stencil</span>
+                                <span class="artist-tag">#Political</span>
+                                <span class="artist-tag">#Satire</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Artist 2 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Shepard Fairey</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Los Angeles, USA</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                American street artist, graphic designer, and founder of OBEY Clothing.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">380</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">9.2k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#Stencil</span>
+                                <span class="artist-tag">#ScreenPrint</span>
+                                <span class="artist-tag">#Propaganda</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Artist 3 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Maya Hayuk</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>New York, USA</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                Known for her large-scale, symmetrical murals featuring vibrant colors and patterns.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">350</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">8.7k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#Abstract</span>
+                                <span class="artist-tag">#Colorful</span>
+                                <span class="artist-tag">#Symmetrical</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Artist 4 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1570158268183-d296b2892211?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Invader</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Paris, France</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                French urban artist known for his mosaic tile works inspired by 8-bit video games.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">320</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">7.9k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#Mosaic</span>
+                                <span class="artist-tag">#8Bit</span>
+                                <span class="artist-tag">#PixelArt</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Artist 5 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Os Gêmeos</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>São Paulo, Brazil</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                Brazilian twin street artists known for their distinctive yellow characters and surreal imagery.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">290</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">6.5k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#Graffiti</span>
+                                <span class="artist-tag">#Surreal</span>
+                                <span class="artist-tag">#Brazilian</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Artist 6 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Swoon</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>New York, USA</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                American street artist known for her life-size wheatpaste prints and paper cutouts.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">275</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">5.8k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#Wheatpaste</span>
+                                <span class="artist-tag">#Portraits</span>
+                                <span class="artist-tag">#Social</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Artist 7 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1476&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">JR</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Paris, France</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                French photographer and street artist known for his large-scale black and white portraits.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">260</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">7.1k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#Photography</span>
+                                <span class="artist-tag">#Portraits</span>
+                                <span class="artist-tag">#LargeScale</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Artist 8 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Artist">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">D*Face</h3>
+                            <div class="artist-card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>London, UK</span>
+                            </div>
+                            <p class="artist-card-bio">
+                                British street artist known for his pop art-inspired works with a dark, satirical twist.
+                            </p>
+                            <div class="artist-card-stats">
+                                <div class="artist-stat">
+                                    <span class="stat-number">240</span>
+                                    <span class="stat-label">Artworks</span>
+                                </div>
+                                <div class="artist-stat">
+                                    <span class="stat-number">5.3k</span>
+                                    <span class="stat-label">Followers</span>
+                                </div>
+                            </div>
+                            <div class="artist-tags">
+                                <span class="artist-tag">#PopArt</span>
+                                <span class="artist-tag">#Satire</span>
+                                <span class="artist-tag">#Dark</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">4</button>
+                    <button class="pagination-btn">5</button>
+                    <button class="pagination-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Artist Spotlights -->
+        <section class="section" style="background-color: var(--secondary);">
+            <div class="container">
+                <h2 class="section-title">Artist Spotlights</h2>
+                <p class="text-center" style="max-width: 700px; margin: 0 auto 50px;">
+                    Discover in-depth interviews and features with some of the most influential street artists working today.
+                </p>
+                
+                <div class="artist-grid">
+                    <!-- Spotlight 1 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Spotlight">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Interview: The Neon Artist</h3>
+                            <p class="artist-card-bio">
+                                We sit down with the anonymous artist behind the glowing murals transforming city nightscapes.
+                            </p>
+                            <a href="#" class="btn btn-primary" style="width: 100%; margin-top: auto; display: block;">Read Article</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Spotlight 2 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Spotlight">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Women in Street Art</h3>
+                            <p class="artist-card-bio">
+                                Exploring the growing influence of female artists in the traditionally male-dominated street art scene.
+                            </p>
+                            <a href="#" class="btn btn-primary" style="width: 100%; margin-top: auto; display: block;">Read Article</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Spotlight 3 -->
+                    <div class="artist-card">
+                        <div class="artist-card-img">
+                            <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80" alt="Spotlight">
+                        </div>
+                        <div class="artist-card-content">
+                            <h3 class="artist-card-name">Collaboration Culture</h3>
+                            <p class="artist-card-bio">
+                                How street artists are coming together to create massive collaborative murals around the world.
+                            </p>
+                            <a href="#" class="btn btn-primary" style="width: 100%; margin-top: auto; display: block;">Read Article</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section">
+            <div class="container">
+                <div class="cta-section">
+                    <h2>Become an Artist on Street & Ink</h2>
+                    <p>
+                        Are you a street artist looking to showcase your work to a global audience? Join our community and get your art seen by thousands of urban art enthusiasts.
+                    </p>
+                    <a href="#" class="btn btn-primary">Submit Your Art</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-about">
+                    <a href="S&ILanding.html" class="footer-logo">Street & <span>Ink</span></a>
+                    <p>The world's most comprehensive street art discovery platform. Documenting urban creativity since 2018.</p>
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: var(--white); font-size: 1.2rem;"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="footer-title">Explore</h3>
+                    <ul class="footer-links">
+                        <li><a href="S&ILanding.html#map">Map</a></li>
+                        <li><a href="S&ILanding.html#art">Street Art</a></li>
+                        <li><a href="S&IArtists.html">Artists</a></li>
+                        <li><a href="S&ILanding.html#categories">Categories</a></li>
+                        <li><a href="S&IArticles.html">Blog</a></li>
+                        <li><a href="#">Events</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-title">Community</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Guidelines</a></li>
+                        <li><a href="#">Submit Art</a></li>
+                        <li><a href="#">Forums</a></li>
+                        <li><a href="#">Meetups</a></li>
+                        <li><a href="#">Wall of Fame</a></li>
+                        <li><a href="#">Get Involved</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="S&ILanding.html#about">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-title">Contact Us</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Art Street, Creative District, CA 90210</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>hello@streetandink.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Street & Ink. All rights reserved. | <a href="#" style="color: var(--accent);">Privacy Policy</a> | <a href="#" style="color: var(--accent);">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const nav = document.getElementById('nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            mobileMenuBtn.innerHTML = nav.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', () => {
+            body.setAttribute('data-theme', 
+                body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            
+            // Save preference to localStorage
+            localStorage.setItem('theme', body.getAttribute('data-theme'));
+            
+            // Update icon
+            themeToggle.innerHTML = body.getAttribute('data-theme') === 'dark' ? 
+                '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.setAttribute('data-theme', savedTheme);
+            themeToggle.innerHTML = savedTheme === 'dark' ? 
+                '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        }
+        
+        // Filter functionality
+        const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
+        filterCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', filterArtists);
+        });
+        
+        const sortSelects = document.querySelectorAll('.sort-select');
+        sortSelects.forEach(select => {
+            select.addEventListener('change', filterArtists);
+        });
+        
+        function filterArtists() {
+            // In a real implementation, this would filter the artist grid
+            console.log('Filters changed - would filter artists in a real implementation');
+        }
+        
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const searchBtn = document.querySelector('.search-btn');
+        
+        searchBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            performSearch();
+        });
+        
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                console.log(`Searching for: ${searchTerm}`);
+                // In a real implementation, this would search the artist database
+                alert(`In a real implementation, this would search for artists matching: ${searchTerm}`);
+            }
+        }
+        
+        // Artist card click handler
+        const artistCards = document.querySelectorAll('.artist-card');
+        artistCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Don't navigate if clicking on a button or link inside the card
+                if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                    return;
+                }
+                
+                const artistName = card.querySelector('.artist-card-name').textContent;
+                console.log(`Navigating to ${artistName}'s profile`);
+                // In a real implementation, this would navigate to the artist's profile page
+                window.location.href = 'S&IArtistProfile.html';
+            });
+        });
+    </script>
+</body>
+</html>
